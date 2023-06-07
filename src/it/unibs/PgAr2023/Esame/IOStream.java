@@ -1,6 +1,11 @@
 package it.unibs.PgAr2023.Esame;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.xml.stream.*;
 
 import it.unibs.fp.mylib.InputDati;
 import it.unibs.fp.mylib.MyMenu;
@@ -30,7 +35,13 @@ public class IOStream {
     public static final String MORTE = "YOU DIED *musica di dark soul in sottofondo";
     public static final String VITTORIA = "LEVEL COMPLETED *muscia di Super Mario di fine livello";
     public static final String COMPLETATO = "hai completato il mondo e ottenuto 110 punti (e una stellina)";
+    public static final String PERSONA = "Ti si presenta un tizio davanti";
+    public static final String MULTE[] = {"Lascia andare", "Multala"};
 
+    //per la parte di codici
+    public static final String comuniPath = "EsameArnaldo\\input\\TestFiles\\Papers_Please\\Comuni.xml";
+    public static final String inputPersonePath = "EsameArnaldo\\input\\TestFiles\\Papers_Please\\PersoneID.xml";
+    public static final String ERRORE_LETTORE = "problemi a leggere i files";
 
 
     public static void pausaDiSistema() {
@@ -93,4 +104,125 @@ public class IOStream {
         } while (scelta > mondipossili || scelta == 0); //+1 erche deve poter almeno giocare al ulmino non finito
         return scelta;
     }
+
+    public static int menuMondo2 () {
+        MyMenu personaMenu = new MyMenu(PERSONA, MULTE);
+        int scelta;
+        do {
+            scelta = personaMenu.scegli();
+        } while (scelta == 0);
+        return scelta;
+    }
+
+
+
+    public static XMLStreamReader inzializzaReader(String path) {
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+        try {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader(path, new FileInputStream(path));
+        } catch (FileNotFoundException e) {
+            System.out.println("File non trovato");
+            System.out.println(e.getMessage());
+        } 
+        catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del reader:");
+            System.out.println(e.getMessage());
+        }
+        return xmlr;
+    }
+
+    public static XMLStreamWriter inizializzaWriter(String path) {
+        XMLOutputFactory xmlof = null;
+        XMLStreamWriter xmlw = null;
+        try {
+            xmlof = XMLOutputFactory.newInstance();
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(path), "utf-8");
+            xmlw.writeStartDocument("utf-8", "1.0");
+        } catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del writer:");
+            System.out.println(e.getMessage());
+        }
+        return xmlw;
+    }
+
+    public static ArrayList<Comune> leggiComuni()  throws XMLStreamException {
+        ArrayList<Comune> comuni = new ArrayList<>();
+        String lastNome = "", lastCodice = "";
+        boolean activeNome = false, activeCodice = false;
+        XMLStreamReader xmlr = inzializzaReader(comuniPath);
+        while (xmlr.hasNext()) {
+            switch (xmlr.getEventType()) {
+                case XMLStreamConstants.START_ELEMENT:
+                if (xmlr.getLocalName().equalsIgnoreCase("comune")) {
+                    lastNome = null;
+                    lastCodice = null;
+                    activeCodice = activeNome = false;
+                } else if (xmlr.getLocalName().equalsIgnoreCase("codice")) activeCodice = true;
+                else if (xmlr.getLocalName().equalsIgnoreCase("nome")) activeNome = true;
+                break;
+                case XMLStreamConstants.CHARACTERS:
+                if (activeCodice) {
+                    lastCodice = xmlr.getText();
+                    activeCodice = false;
+                }
+                else if (activeNome) {
+                    lastNome = xmlr.getText();
+                    activeNome = false;
+                }
+                break;
+                case XMLStreamConstants.END_ELEMENT:
+                if (xmlr.getLocalName().equalsIgnoreCase("comune")) comuni.add(new Comune(lastNome, lastCodice));
+                break;
+            }
+        xmlr.next();
+        }
+        xmlr.close();
+        return comuni;
+    }
+
+    public static ArrayList<Persona> leggiPersone () throws XMLStreamException {
+        ArrayList<Persona> persone = new ArrayList<>();
+        XMLStreamReader xmlr = inzializzaReader(inputPersonePath);
+        String lastNome = null, lastCognome = null, lastComune = null, lastCodice = null;
+        LocalDate lastDate = LocalDate.MIN;
+        LocalDate lastID = LocalDate.MIN;
+        char lastSesso = '0';
+        while (xmlr.hasNext()) {
+            switch (xmlr.getEventType()) {
+                case XMLStreamConstants.START_ELEMENT:
+                switch (xmlr.getLocalName()) {
+                    case "nome":
+                    lastNome = xmlr.getElementText();
+                    break;
+                    case "cognome":
+                    lastCognome = xmlr.getElementText();
+                    break;
+                    case "sesso":
+                    lastSesso = xmlr.getElementText().charAt(0);
+                    break;
+                    case "comune_nascita":
+                    lastComune = xmlr.getElementText();
+                    break;
+                    case "codice_fiscale":
+                    lastCodice = xmlr.getElementText();
+                    break;
+                    case "data_nascita":
+                    lastDate = LocalDate.parse(xmlr.getElementText());
+                    case "data_scadenza_id":
+                    lastID = LocalDate.parse(xmlr.getElementText());
+                    break;
+                }
+                break;
+                case XMLStreamConstants.END_ELEMENT:
+                if (xmlr.getLocalName().equals("persona")) persone.add(new Persona(persone.size(), lastSesso, lastNome, lastCognome, lastComune, lastDate,lastCodice, lastID));
+                break;
+            }
+        xmlr.next();
+        }
+        xmlr.close();
+        return persone;
+    }
+
 }

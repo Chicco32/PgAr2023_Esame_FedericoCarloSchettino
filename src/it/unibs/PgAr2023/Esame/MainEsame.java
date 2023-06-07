@@ -14,6 +14,7 @@ public class MainEsame {
         boolean finito = false;
         do {
             MCharacter main = IOStream.creazioenMC();
+            System.out.println(String.format(IOStream.TENTATIVI, tentativiRimasti));
             int scelta = IOStream.menuScelta(mondiCompletati);
             switch (scelta) {
                 case 1:
@@ -24,6 +25,14 @@ public class MainEsame {
                 }
                 else tentativiRimasti--;
                 break;
+                case 2:
+                System.out.println("UNDER DEVELOPMENT");
+                /*finito = Mondo2.muovitiNellaMappa(main, tentativiRimasti);
+                if (finito)  {
+                    mondiCompletati[1] = true;
+                    System.out.println(IOStream.COMPLETATO);
+                } 
+                else tentativiRimasti--; */
                 default:
                 break;
             }

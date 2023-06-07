@@ -8,11 +8,11 @@ import java.util.Random;
 public class Mondo1 {
     
     public static ArrayList<Nodo> mondoBase = inizializzaMappaBase();
-    private static final int MAXNODI = 20;
-    private static final int MINNODI = 4;
+    private static final int MAXNODI = 30;
+    private static final int MINNODI = 6;
 
 
-    private static ArrayList<Nodo> inizializzaMappaBase() {
+    public static ArrayList<Nodo> inizializzaMappaBase() {
         ArrayList<Nodo> mondoBase = new ArrayList<>();
         mondoBase.add(new NodoIniziale(0));
         for (int i = 1; i<=5; i++) {
@@ -32,7 +32,7 @@ public class Mondo1 {
 
     }
 
-    private static ArrayList<Nodo> inizializzaMappaRandom() {
+    public static ArrayList<Nodo> inizializzaMappaRandom() {
         Random random = new Random();
         ArrayList<Nodo> mappa = new ArrayList<>();
         int nIntermedi = random.nextInt(MINNODI -2, MAXNODI - 2); //scelgo quanti intermedi avere
@@ -87,13 +87,13 @@ public class Mondo1 {
 
     public static boolean muovitiNellaMappa(MCharacter main, int tentativiRimasti) {
         ArrayList<Nodo> mappa = new ArrayList<>();
-        /*Random random = new Random();
+        Random random = new Random();
         if (random.nextBoolean()) mappa = inizializzaMappaRandom();
-        else
-        mappa = inizializzaMappaBase(); */
-        mappa = inizializzaMappaRandom();
+        else mappa = inizializzaMappaBase();
         int posizioneMC = 0;
-        do {
+
+
+        do { //inizio del viaggio
             IOStream.mostraPosizione(posizioneMC, main);
             mappa.get(posizioneMC).setVisitato();
             if (mappa.get(posizioneMC) instanceof NodoIntermedio || mappa.get(posizioneMC) instanceof NodoFinale) { //è un nodo intermedio

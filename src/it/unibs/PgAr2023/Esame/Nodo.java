@@ -9,8 +9,10 @@ public abstract class Nodo {
     private ArrayList<Nodo> nodiConnessi;
     private int hashCode;
     private tipoNodo tipo;
-    private Mostro mostro;
     private boolean visitato;
+
+    private Mostro mostro;
+    private Persona persona;
 
     public Nodo(int hashCode, tipoNodo tipo) {
         this.nodiConnessi = new ArrayList<>();
@@ -18,6 +20,7 @@ public abstract class Nodo {
         this.tipo = tipo;
         this.mostro = null;
         this.visitato = false;
+        this.persona = null;
     }
 
     public ArrayList<Nodo> getNodiConnessi() {
@@ -54,6 +57,14 @@ public abstract class Nodo {
 
     public void setVisitato() {
         this.visitato = true;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
     
     
