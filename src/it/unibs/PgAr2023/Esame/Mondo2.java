@@ -3,7 +3,6 @@ package it.unibs.PgAr2023.Esame;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.xml.stream.XMLStreamException;
 
 
@@ -34,18 +33,31 @@ public class Mondo2 {
         do { //inizio del viaggio
             
             String codiceValido = Persona.generaCodiceFiscale(mappa.get(posizioneMC).getPersona());
-            boolean valido = Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio);
+            boolean IDvalido = Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio);
             int  decisione = IOStream.menuMondo2();
             switch (decisione) {
                 case 1:
+                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || !IDvalido) { //uno dei dati non va bene
+                    System.out.println(IOStream.PENALITA);
+                    stipendiobase = stipendiobase - 300;
+                }
                 break;
                 case 2:
+                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || !IDvalido) {
+                    stipendiobase = stipendiobase + corrompi(mappa.get(posizioneMC).getPersona());
+                }
                 break;
             }
-
-
             posizioneMC = IOStream.sceltaStrada(mappa, posizioneMC);
             datainizio.plusDays(1);
+
+            if (mappa.get(posizioneMC) instanceof NodoFinale) {
+                System.out.println(IOStream.TASSE);
+                if (stipendiobase < TASSE) {
+                    System.out.println(IOStream.MORTE);
+                    return false;
+                }
+            }
         } while (posizioneMC < mappa.size());
         System.out.println(IOStream.VITTORIA);
         return true;
@@ -55,5 +67,14 @@ public class Mondo2 {
     private static boolean isCodiceScaduto (Persona persona, LocalDate oggi) {
         if (oggi.isAfter(persona.getScadenzaID())) return true;
         else return false;
+    }
+
+    private static int corrompi(Persona persona) {
+        Random random = new Random();
+        int corruzione = random.nextInt(250, 551);
+        int decisione = IOStream.menuCorruzione(corruzione);
+        if (decisione == 0) return 0;
+        else return corruzione;
+
     }
 }

@@ -37,11 +37,15 @@ public class IOStream {
     public static final String COMPLETATO = "hai completato il mondo e ottenuto 110 punti (e una stellina)";
     public static final String PERSONA = "Ti si presenta un tizio davanti";
     public static final String MULTE[] = {"Lascia andare", "Multala"};
+    public static final String PENALITA = "Eh no, male! Sono via 300 sbleuri!";
+    public static final String PROPOSTA_CORRUZIONE = "Senti amicU, posso offrirti ben %d sbleuri sonanti sonanti se mi lasci andare";
+    public static final String ACCETTA[] = {"Accetta"};
+    public static final String TASSE = "Ding Ding Ding e' l'ora di pagare le tasse altrimenti muori"; 
 
     //per la parte di codici
-    public static final String comuniPath = "EsameArnaldo\\input\\TestFiles\\Papers_Please\\Comuni.xml";
-    public static final String inputPersonePath = "EsameArnaldo\\input\\TestFiles\\Papers_Please\\PersoneID.xml";
-    public static final String ERRORE_LETTORE = "problemi a leggere i files";
+    public static final String comuniPath = "C:\\Users\\info\\VS-Java_workspace\\EsameArnaldo\\input\\TestFiles\\Papers_Please\\Comuni.xml";
+    public static final String inputPersonePath = "C:\\Users\\info\\VS-Java_workspace\\EsameArnaldo\\input\\TestFiles\\Papers_Please\\PersoneID.xml";
+    public static final String ERRORE_LETTORE = "problemi a leggere i files nello stream";
 
 
     public static void pausaDiSistema() {
@@ -114,6 +118,12 @@ public class IOStream {
         return scelta;
     }
 
+    public static int menuCorruzione (int cifra) {
+        MyMenu corruzioneMenu = new MyMenu(String.format(PROPOSTA_CORRUZIONE, cifra), ACCETTA);
+        int scelta;
+        scelta = corruzioneMenu.scegli();
+        return scelta;
+    }
 
 
     public static XMLStreamReader inzializzaReader(String path) {
@@ -131,20 +141,6 @@ public class IOStream {
             System.out.println(e.getMessage());
         }
         return xmlr;
-    }
-
-    public static XMLStreamWriter inizializzaWriter(String path) {
-        XMLOutputFactory xmlof = null;
-        XMLStreamWriter xmlw = null;
-        try {
-            xmlof = XMLOutputFactory.newInstance();
-            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(path), "utf-8");
-            xmlw.writeStartDocument("utf-8", "1.0");
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del writer:");
-            System.out.println(e.getMessage());
-        }
-        return xmlw;
     }
 
     public static ArrayList<Comune> leggiComuni()  throws XMLStreamException {

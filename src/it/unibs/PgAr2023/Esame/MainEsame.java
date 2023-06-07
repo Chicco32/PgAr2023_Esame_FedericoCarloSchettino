@@ -26,13 +26,12 @@ public class MainEsame {
                 else tentativiRimasti--;
                 break;
                 case 2:
-                System.out.println("UNDER DEVELOPMENT");
-                /*finito = Mondo2.muovitiNellaMappa(main, tentativiRimasti);
+                finito = Mondo2.muovitiNellaMappa(main, tentativiRimasti);
                 if (finito)  {
                     mondiCompletati[1] = true;
                     System.out.println(IOStream.COMPLETATO);
                 } 
-                else tentativiRimasti--; */
+                else tentativiRimasti--;
                 default:
                 break;
             }
