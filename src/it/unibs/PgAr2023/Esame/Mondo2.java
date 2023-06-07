@@ -34,7 +34,7 @@ public class Mondo2 {
             
             String codiceValido = Persona.generaCodiceFiscale(mappa.get(posizioneMC).getPersona());
             boolean IDvalido = Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio);
-            int  decisione = IOStream.menuMondo2();
+            int  decisione = IOStream.menuMondo2(mappa.get(posizioneMC).getPersona());
             switch (decisione) {
                 case 1:
                 if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || !IDvalido) { //uno dei dati non va bene

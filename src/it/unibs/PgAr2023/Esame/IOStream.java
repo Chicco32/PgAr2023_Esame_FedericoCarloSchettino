@@ -2,7 +2,6 @@ package it.unibs.PgAr2023.Esame;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.xml.stream.*;
@@ -41,6 +40,7 @@ public class IOStream {
     public static final String PROPOSTA_CORRUZIONE = "Senti amicU, posso offrirti ben %d sbleuri sonanti sonanti se mi lasci andare";
     public static final String ACCETTA[] = {"Accetta"};
     public static final String TASSE = "Ding Ding Ding e' l'ora di pagare le tasse altrimenti muori"; 
+    public static final String CALENDARIO = "Calendario: %s";
 
     //per la parte di codici
     public static final String comuniPath = "C:\\Users\\info\\VS-Java_workspace\\EsameArnaldo\\input\\TestFiles\\Papers_Please\\Comuni.xml";
@@ -109,7 +109,9 @@ public class IOStream {
         return scelta;
     }
 
-    public static int menuMondo2 () {
+    public static int menuMondo2 (Persona persona) {
+        //System.out.println(String.format(CALENDARIO, data.toString()));
+        System.out.println(persona.toString());
         MyMenu personaMenu = new MyMenu(PERSONA, MULTE);
         int scelta;
         do {
@@ -201,13 +203,16 @@ public class IOStream {
                     case "comune_nascita":
                     lastComune = xmlr.getElementText();
                     break;
+                    case "data_nascita":
+                    lastDate = LocalDate.parse(xmlr.getElementText());
+                    break;
                     case "codice_fiscale":
                     lastCodice = xmlr.getElementText();
                     break;
-                    case "data_nascita":
-                    lastDate = LocalDate.parse(xmlr.getElementText());
                     case "data_scadenza_id":
                     lastID = LocalDate.parse(xmlr.getElementText());
+                    break;
+                    default:
                     break;
                 }
                 break;
