@@ -43,7 +43,7 @@ public class Mondo1 {
 
             int aggiungiCollegamenti = random.nextInt(1, nIntermedi/2); //sceglie un numero di collegamenti fra 1 e la metà di tutti
             for (int i =0; i< aggiungiCollegamenti; i++) {
-                int prossimoNodo = random.nextInt(1, nIntermedi +1); //sceglie la prosssima destinazione fra gli intermedi
+                int prossimoNodo = random.nextInt(1, nIntermedi); //sceglie la prosssima destinazione fra gli intermedi
                 if (nodo.getNodiConnessi().isEmpty()) nodo.getNodiConnessi().add(mappa.get(prossimoNodo)); //doppio riferimento da nodo
                 else {
                     int missing = 0;

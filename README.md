@@ -14,7 +14,7 @@
 14
 15 - Modulo 1
 16 - [ ] Modulo 1.1: Lettura XML e creazione mappa
-17 - [ ] Modulo 1.2: Creazione casuale della mappa
+17 - [x] Modulo 1.2: Creazione casuale della mappa
 18 - [ ] Modulo 2: Nuovi mondi
 19 - [ ] Modulo 3: Percorso suggerito
 20 - Modulo 4 ( Riciclo )
