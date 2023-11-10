@@ -8,22 +8,23 @@ import javax.xml.stream.XMLStreamException;
 
 public class Mondo2 {
     
+    private static final int NMONDO = 2;
     private static final int TASSE = 2200;
 
 
-    public static boolean muovitiNellaMappa(MCharacter main, int tentativiRimasti) {
+    public static boolean muovitiNellaMappa (MCharacter main) {
         ArrayList<Nodo> mappa = new ArrayList<>();
         ArrayList<Persona> listaPersone = new ArrayList<>();
         Random random = new Random();
-        if (random.nextBoolean()) mappa = Mondo1.inizializzaMappaRandom();
-        else mappa = Mondo1.getMondoBase();
+        if (random.nextBoolean()) mappa = CreatoreMappe.inizializzaMappaRandom(NMONDO);
+        else mappa = CreatoreMappe.inizializzaMappaBase(NMONDO);
         int posizioneMC = 0;
         LocalDate datainizio = LocalDate.parse("2023-06-07");
         int stipendiobase = 1100;
         try {
-            listaPersone = IOStream.leggiPersone();
+            listaPersone = XMLStream.leggiPersone();
         } catch (XMLStreamException e) {
-            System.out.println(IOStream.ERRORE_LETTORE);
+            System.out.println(XMLStream.ERRORE_LETTORE);
             return false;
         }
         //inizializzo la mappa
@@ -31,25 +32,30 @@ public class Mondo2 {
 
 
         do { //inizio del viaggio
-            
+
+            mappa.get(posizioneMC).setVisitato();
             String codiceValido = Persona.generaCodiceFiscale(mappa.get(posizioneMC).getPersona());
-            boolean IDvalido = Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio);
-            int  decisione = IOStream.menuMondo2(mappa.get(posizioneMC).getPersona());
+            int  decisione = IOStream.menuMondo2(mappa.get(posizioneMC).getPersona(), stipendiobase, datainizio, posizioneMC, main);
             switch (decisione) {
                 case 1:
-                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || !IDvalido) { //uno dei dati non va bene
+                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio)) { //uno dei dati non va bene
                     System.out.println(IOStream.PENALITA);
                     stipendiobase = stipendiobase - 300;
                 }
                 break;
                 case 2:
-                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || !IDvalido) {
+                if (codiceValido.equalsIgnoreCase(mappa.get(posizioneMC).getPersona().getCodiceFiscale()) == false || Mondo2.isCodiceScaduto(mappa.get(posizioneMC).getPersona(), datainizio)) {
                     stipendiobase = stipendiobase + corrompi(mappa.get(posizioneMC).getPersona());
+                }
+                else {
+                    System.out.println(IOStream.PENALITA);
+                    stipendiobase = stipendiobase - 300;
                 }
                 break;
             }
+            datainizio = datainizio.plusDays(1);
             posizioneMC = IOStream.sceltaStrada(mappa, posizioneMC);
-            datainizio.plusDays(1);
+            
 
             if (mappa.get(posizioneMC) instanceof NodoFinale) {
                 System.out.println(IOStream.TASSE);
@@ -57,6 +63,7 @@ public class Mondo2 {
                     System.out.println(IOStream.MORTE);
                     return false;
                 }
+                else break;
             }
         } while (posizioneMC < mappa.size());
         System.out.println(IOStream.VITTORIA);
@@ -65,8 +72,8 @@ public class Mondo2 {
 
 
     private static boolean isCodiceScaduto (Persona persona, LocalDate oggi) {
-        if (oggi.isAfter(persona.getScadenzaID())) return true;
-        else return false;
+        if (persona.getScadenzaID().isAfter(oggi)) return false;
+        else return true;
     }
 
     private static int corrompi(Persona persona) {
@@ -74,7 +81,12 @@ public class Mondo2 {
         int corruzione = random.nextInt(250, 551);
         int decisione = IOStream.menuCorruzione(corruzione);
         if (decisione == 0) return 0;
-        else return corruzione;
-
+        else {
+            if (persona.isPolizziotto()) {
+                System.out.println(IOStream.POLIZZIOTTO);
+                return -300;
+            }
+            else return corruzione;
+        }
     }
 }

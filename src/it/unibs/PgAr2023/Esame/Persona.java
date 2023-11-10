@@ -1,13 +1,14 @@
 package it.unibs.PgAr2023.Esame;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Persona {
     
-    /**
-     *
-     */
+    
     private static final int CIN_DIVISION_CONST = 26;
+    private static final double PROB_CONST = 0.2;
+
     private int id;
     private char sesso;
     private String nome;
@@ -16,6 +17,7 @@ public class Persona {
     private LocalDate dataNascita;
     private String codiceFiscale;
     private LocalDate scadenzaID;
+    private boolean polizziotto; 
     
     public Persona(int id, char sesso, String nome, String cognome, String comuneNascita, LocalDate dataNascita, String codiceFiscale, LocalDate scadenzaID) {
         this.id = id;
@@ -26,6 +28,7 @@ public class Persona {
         this.dataNascita = dataNascita;
         this.codiceFiscale = codiceFiscale;
         this.scadenzaID = scadenzaID;
+        this.polizziotto = setPolizziotto();
     }
 
 
@@ -126,7 +129,7 @@ public class Persona {
     public static StringBuffer generaCodiceComune(Persona persona) {
         StringBuffer str = new StringBuffer();
         try {
-            ArrayList<Comune> listaComuni = IOStream.leggiComuni();
+            ArrayList<Comune> listaComuni = XMLStream.leggiComuni();
             for (Comune comune : listaComuni) {
                 if (persona.comuneNascita.equalsIgnoreCase(comune.getNome())) str.append(comune.getCodice());
         }
@@ -146,6 +149,12 @@ public class Persona {
         }
         return Tabelle.mappaResti.get(somma % CIN_DIVISION_CONST);
         
+    }
+
+    private boolean setPolizziotto() {
+        Random random = new Random();
+        if (random.nextDouble() > PROB_CONST) return false;
+        else return true;
     }
 
     public int getId() {
@@ -169,6 +178,10 @@ public class Persona {
     public String getCodiceFiscale() {
         return codiceFiscale;
     }
+    public boolean isPolizziotto() {
+        return polizziotto;
+    }
+
 
     public void setId(int id) {
         this.id = id;

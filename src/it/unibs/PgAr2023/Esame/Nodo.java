@@ -31,6 +31,10 @@ public abstract class Nodo {
         return hashCode;
     }
 
+    /**
+     * prende la lista di nodi interna al nodo da cui è chiamata e ci aggiunge il nodo in ingresso
+     * @param nodo il nodo destinazione da inserire
+     */
     public void aggiungiCollegamento(Nodo nodo) {
         this.nodiConnessi.add(nodo);
     }
@@ -43,12 +47,20 @@ public abstract class Nodo {
         return mostro;
     }
 
+    public Tamagolem getTamaSelvatico () {
+        if (this.mostro instanceof Tamagolem) return (Tamagolem) this.mostro;
+        else return null;
+    }
+
     public void setMostro(Mostro mostro) {
         this.mostro = mostro;
     }
 
     public void setMostrovuoto() {
         this.mostro = null;
+    }
+    public void setPersonavuota() {
+        this.persona = null;
     }
 
     public boolean isVisitato() {

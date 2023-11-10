@@ -8,18 +8,20 @@ public class Cammo extends Mostro {
 
     public Cammo() {
         super(VITA_BASE, ATTACCO_BASE);
+        this.setNome("Cammo");
     }
 
+    
+    public String toString() {
 
-    public static int getVitaBase() {
-        return VITA_BASE;
+        StringBuffer str = new StringBuffer();
+        str.append("Cammo: Attacco: ");
+        str.append(this.getAttacco());
+        str.append(" Vita: ");
+        str.append(this.getVita());
+        return str.toString();
+
     }
-
-
-    public static int getAttaccoBase() {
-        return ATTACCO_BASE;
-    }
-
 
     
 

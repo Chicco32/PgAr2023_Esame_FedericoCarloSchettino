@@ -16,10 +16,9 @@ public class Mostro {
         this.nome = "Boboklin";
     }
 
-    public Mostro(int vitaBase, int attaccoBase) { //ovverride per cammo
+    public Mostro(int vitaBase, int attaccoBase) { //ovverride per cammo e tamagolem
         this.vita = alteraVita(vitaBase);
         this.attacco = alteraAttacco(attaccoBase);
-        this.nome = "Cammo";
     }
 
     private int alteraVita() {
@@ -62,15 +61,23 @@ public class Mostro {
         this.attacco = attacco;
     }
 
+    public void setNome (String nome) {
+        this.nome = nome;
+    }
+
     public String getNome() {
         return nome;
     }
 
     public void scontro(MCharacter main) {
+        if (main.getVita() > 0) { //il mc non può attaccare dal paradiso
             this.setVita(this.getVita() - main.getAttacco()); //l'attacco del MC
             System.out.println(String.format(IOStream.ATTACCO, main.getNome(), main.getAttacco()));
+        }
+        if (this.getVita() > 0) { //il mostro non è bello che attacchi da morto
             main.setVita(main.getVita() - this.getAttacco()); //l'attacco del mostro
             System.out.println(String.format(IOStream.ATTACCO, "mostro", this.getAttacco()));//iostream mostrattacco
+        }
     }
 
 
